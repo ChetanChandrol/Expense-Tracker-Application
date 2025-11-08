@@ -1,0 +1,24 @@
+package com.dev.Splitwise.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.Currency;
+import java.util.List;
+@Entity
+@Setter
+@Getter
+public class Expense extends BaseModel{
+    private String description;
+    private Double amount;
+    private LocalDateTime expenseTime;
+    private Currency currency;
+    @ManyToOne
+    private User addedBy;
+    @OneToMany
+    private List<UserExpense> userExpenses;
+}
