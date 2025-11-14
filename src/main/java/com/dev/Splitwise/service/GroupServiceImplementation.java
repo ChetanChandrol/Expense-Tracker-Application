@@ -1,11 +1,13 @@
 package com.dev.Splitwise.service;
 
+import com.dev.Splitwise.constant.SettleUpStrategies;
 import com.dev.Splitwise.dto.GroupCreationRequestDto;
 import com.dev.Splitwise.entity.Group;
 import com.dev.Splitwise.entity.SettlementTransaction;
 import com.dev.Splitwise.entity.User;
 import com.dev.Splitwise.repository.GroupRepository;
 import com.dev.Splitwise.repository.UserRepository;
+import com.dev.Splitwise.service.strategy.SettleUpStrategyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,14 @@ public class GroupServiceImplementation implements GroupService {
 
     @Override
     public List<SettlementTransaction> settleUp(int groupId) {
-        return List.of();
+       Group savedGroup =  groupRepository.findById(groupId).orElseThrow(
+               () -> new RuntimeException(" Group does not exist with the group id "+ groupId)
+       );
+       if (savedGroup.getExpense()!=null && !savedGroup.getExpense().isEmpty()){
+        return SettleUpStrategyFactory.getSettleUpStrategyFactory(SettleUpStrategies.MINIMUM_TRANSACTION_STRATEGY).
+                getSettlementTransactions(savedGroup.getExpense());
+    }
+       throw new RuntimeException("No expenses exist for the group ID: "+groupId);
     }
 
     @Override
@@ -58,7 +67,18 @@ public class GroupServiceImplementation implements GroupService {
 
     @Override
     public Boolean deleteGroup(int groupId) {
+        Group group = groupRepository.findById(groupId).orElseThrow(
+                () -> new RuntimeException("Group does not exist with group id :" + groupId)
+        );
+
+        for (User user:group.getMembers())
+        {
+            user.getGroups().remove(group);
+            userRepository.save(user);
+        }
+
         groupRepository.deleteById(groupId);
+
         return true;
     }
 

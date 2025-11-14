@@ -3,6 +3,7 @@ package com.dev.Splitwise.controller;
 import com.dev.Splitwise.dto.GroupCreationRequestDto;
 import com.dev.Splitwise.entity.Group;
 import com.dev.Splitwise.entity.SettlementTransaction;
+import com.dev.Splitwise.mapper.EntityDtoMapper;
 import com.dev.Splitwise.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,25 +21,15 @@ public class GroupController {
     public ResponseEntity settleUp (@PathVariable("groupId") int groupId)
     {
         List <SettlementTransaction> settlementTransactions = groupService.settleUp(groupId);
-        return ResponseEntity.ok(settlementTransactions);
-    }
 
-    @DeleteMapping("/delete-group/{groupId}")
-    public ResponseEntity deleteGroup(@PathVariable("groupId") int groupId)
-    {
-        return ResponseEntity.ok(groupService.deleteGroup(groupId));
-    }
-    @GetMapping("/get-group/{groupId}")
-    public ResponseEntity getGroup(@PathVariable("groupId") int groupId)
-    {
-        return ResponseEntity.ok(groupService.getGroup(groupId));
+        return ResponseEntity.ok(EntityDtoMapper.toSettlementTransactionResponseDTO(settlementTransactions));
     }
 
     @PostMapping("/create-group/{userId}")
     public ResponseEntity createGroup (@RequestBody GroupCreationRequestDto groupCreationRequestDto, @PathVariable("userId") int userId )
     {   //validation on name and list>1
         Group createdGroup = groupService.createGroup(groupCreationRequestDto,userId);
-        return ResponseEntity.ok(createdGroup);
+        return ResponseEntity.ok(EntityDtoMapper.toCreateGroupResponseDTO(createdGroup));
     }
 
     @PutMapping("/update-group/{groupId}")
@@ -47,6 +38,23 @@ public class GroupController {
 
         return null;
     }
+
+    @DeleteMapping("/delete-group/{groupId}")
+    public ResponseEntity deleteGroup(@PathVariable("groupId") int groupId)
+    {   groupService.deleteGroup(groupId);
+        return ResponseEntity.ok("Group Deleted Successfully");
+    }
+
+    @GetMapping("/get-group/{groupId}")
+    public ResponseEntity getGroup(@PathVariable("groupId") int groupId)
+    {
+        Group group = groupService.getGroup(groupId);
+        return ResponseEntity.ok(EntityDtoMapper.toGetGroupResponseDTO(group));
+    }
+
+
+
+
 
 
 

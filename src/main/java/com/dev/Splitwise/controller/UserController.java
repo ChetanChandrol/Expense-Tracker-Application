@@ -1,7 +1,6 @@
 package com.dev.Splitwise.controller;
 
 import com.dev.Splitwise.dto.UserLoginRequestDTO;
-import com.dev.Splitwise.dto.UserLoginResponseDTO;
 import com.dev.Splitwise.dto.UserRegistrationRequestDto;
 import com.dev.Splitwise.entity.User;
 import com.dev.Splitwise.exception.UserInvallidPasswordException;
@@ -22,7 +21,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody UserRegistrationRequestDto userRegistrationRequestDto) {
        User savedUser = userService.signup(userRegistrationRequestDto.getName(), userRegistrationRequestDto.getEmail(), userRegistrationRequestDto.getPassword());
-        return ResponseEntity.ok(EntityDtoMapper.toDo(savedUser));
+        return ResponseEntity.ok(EntityDtoMapper.toUserLoginResponse(savedUser));
     }
 
     public void validateUserRegistrationRequestDTo(UserRegistrationRequestDto RequestDto) {
@@ -34,10 +33,11 @@ public class UserController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody UserLoginRequestDTO userLoginRequestDTODTO) {
-        validateUserLoginRequestDTo(userLoginRequestDTODTO);
-        User savedUser = userService.login(userLoginRequestDTODTO.getEmail(), userLoginRequestDTODTO.getPassword());
-        return ResponseEntity.ok(EntityDtoMapper.toDo(savedUser));
+    public ResponseEntity login(@RequestBody UserLoginRequestDTO userLoginRequestDTO) {
+        validateUserLoginRequestDTo(userLoginRequestDTO);
+        User savedUser = userService.login(userLoginRequestDTO.getEmail(), userLoginRequestDTO.getPassword());
+        return ResponseEntity.ok(EntityDtoMapper.toUserLoginResponse(savedUser));
+
     }
 
     public void validateUserLoginRequestDTo(UserLoginRequestDTO RequestDto) {

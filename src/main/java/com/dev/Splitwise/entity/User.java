@@ -1,5 +1,6 @@
 package com.dev.Splitwise.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import lombok.Getter;
@@ -14,6 +15,7 @@ public class User extends BaseModel {
     private String email;
     private String password;
     @ManyToMany
+//    @JsonBackReference
     private List<Group> groups;
     @ManyToMany
     private List<User> friends;

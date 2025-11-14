@@ -1,6 +1,7 @@
 package com.dev.Splitwise.controller;
 
 import com.dev.Splitwise.entity.Expense;
+import com.dev.Splitwise.mapper.EntityDtoMapper;
 import com.dev.Splitwise.service.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,9 @@ public class ExpenseController {
         if (expense.getAmount() == null || expense.getAmount() == 0) {
             throw new RuntimeException("Expense amount cannot be null or zero");
         }
-        return ResponseEntity.ok(expenseService.addExpense(expense, groupId));
+        Expense savedExpense = expenseService.addExpense(expense, groupId);
+        return ResponseEntity.ok(EntityDtoMapper.toCreateExpenseResponseDTO(savedExpense));
     }
-
 
     @PutMapping("/update-expense/{groupId}")
     public ResponseEntity updateExpense(@RequestBody Expense expense, @PathVariable int groupId) {
@@ -31,15 +32,25 @@ public class ExpenseController {
         if (expense.getAmount() == null || expense.getAmount() == 0) {
             throw new RuntimeException("Expense amount cannot be null or zero");
         }
-        return ResponseEntity.ok(expenseService.updateExpense(expense, groupId));
+        Expense savedExpense = expenseService.updateExpense(expense, groupId);
+        return ResponseEntity.ok(EntityDtoMapper.toCreateExpenseResponseDTO(savedExpense));
     }
 
     @DeleteMapping("/delete-expense/{expenseId}/{groupId}")
     public ResponseEntity deleteExpense(@PathVariable int expenseId, @PathVariable int groupId) {
-        return ResponseEntity.ok(deleteExpense(expenseId, groupId));
+        Boolean b = expenseService.deleteExpense(expenseId, groupId);
+        return ResponseEntity.ok("EXPENSE DELETED SUCCESSFULLY");
+    }
+
+    @GetMapping("/get-expense/{expenseId}")
+    public ResponseEntity getExpense(@PathVariable int expenseId)
+        {
+           Expense expense =  expenseService.getExpense(expenseId);
+            return ResponseEntity.ok(EntityDtoMapper.toCreateExpenseResponseDTO(expense));
+        }
 
     }
 
 
 
-}
+

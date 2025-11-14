@@ -51,13 +51,13 @@ public class MinimumTransactionSettlementStrategy implements settleUpStrategy {
                 maxHeap.add(new UserAmount(entry.getKey(),entry.getValue()));
             }
             else {
-                System.out.println("User Doesnot Need to participate in settlement");
+                System.out.println("User Does not Need to participate in settlement");
             }
 
         }
         List<SettlementTransaction> settlementTransactions = new ArrayList<>();
 
-        while (maxHeap.size()==0 && minHeap.size()==0)
+        while (!maxHeap.isEmpty() && !minHeap.isEmpty())
         {
              UserAmount borrower = minHeap.poll();
              UserAmount lender = maxHeap.poll();

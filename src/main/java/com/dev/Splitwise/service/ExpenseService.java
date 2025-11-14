@@ -6,4 +6,5 @@ public interface ExpenseService {
     public Expense addExpense (Expense expense , int groupId);
     public Expense updateExpense (Expense expense , int groupId);
     public boolean deleteExpense (int expenseId , int groupId);
+    public Expense getExpense(int expenseId);
 }

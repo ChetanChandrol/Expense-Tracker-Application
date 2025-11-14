@@ -12,16 +12,16 @@ import java.util.List;
 @Getter
 @Setter
 @Entity(name = "SplitwiseGroup")
-public class Group extends BaseModel{
+public class Group extends BaseModel {
     private String name;
     private double totalAmountSpent;
     @ManyToMany
-    private List<User> members ;
+//    @JsonManagedReference
+    private List<User> members;
     @OneToMany
     private List<Expense> expense;
     @OneToMany
-    private List<SettlementTransaction> settlementTranactions;
+    private List<SettlementTransaction> settlementTransactions;
     @ManyToOne
     private User createdBy;
-
 }
