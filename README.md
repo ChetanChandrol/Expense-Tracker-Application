@@ -30,7 +30,7 @@ The backend provides REST APIs for managing all core Splitwise features.
 * Spring Boot
 * Spring Data JPA
 * Hibernate
-* MySQL / PostgreSQL (any relational database)
+* MySQL
 * Lombok
 
 ---
@@ -80,26 +80,32 @@ Represents any amount spent by a user.
 
 ## 🚀 API Endpoints
 
-### **Group APIs**
+### **User APIs**
 
 ```
-POST /groups            → Create group
-GET /groups/{id}        → Get group details
-POST /groups/{id}/add   → Add member to group
+POST /signup                     → Register new user
+POST /login                      → Login user
+
+```
+
+### **Grouo APIs**
+
+```
+POST /create-group/{userId}      → Create a new group
+GET  /get-group/{groupId}        → Get group details
+DELETE /delete-group/{groupId}   → Delete group
+POST /settleup/{groupId}         → Settle all balances in a group
+
 ```
 
 ### **Expense APIs**
 
 ```
-POST /expenses                 → Add expense
-DELETE /expenses/{id}          → Delete expense
-GET /groups/{id}/expenses      → List all expenses of group
-```
+POST   /add-expense/{groupId}                 → Add expense to a group
+PUT    /update-expense/{groupId}              → Update existing expense
+DELETE /delete-expense/{expenseId}/{groupId}  → Delete expense
+GET    /get-expense/{expenseId}               → Get expense details
 
-### **Settlement APIs**
-
-```
-GET /groups/{id}/balance       → Who owes whom
 ```
 
 ---
@@ -145,6 +151,24 @@ Or run from IDE.
 
 ## 📘 Sample JSON Requests
 
+### **Signup**
+
+```json
+{
+  "name": "John Doe",
+  "email": "john@gmail.com",
+  "password": "12345"
+}
+```
+### **Login**
+
+```json
+{
+ "email": "john@gmail.com",
+  "password": "12345"
+}
+```
+
 ### **Create Group**
 
 ```json
@@ -158,10 +182,29 @@ Or run from IDE.
 
 ```json
 {
-  "description": "Dinner",
+  "description": "Dinner at Cafe",
   "amount": 1500,
   "addedBy": 2,
-  "groupId": 1
+  "userExpenses": [
+    { "userId": 1, "amount": 500 },
+    { "userId": 2, "amount": 500 },
+    { "userId": 3, "amount": 500 }
+  ]
+}
+```
+### **Update Expense**
+
+```json
+{
+    "expenseId": 10,
+  "description": "Updated Dinner Bill",
+  "amount": 1800,
+  "addedBy": 2,
+  "userExpenses": [
+    { "userId": 1, "amount": 600 },
+    { "userId": 2, "amount": 600 },
+    { "userId": 3, "amount": 600 }
+  ]
 }
 ```
 
